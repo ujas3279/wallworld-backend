@@ -28,17 +28,27 @@ app.use("/api", bannerRoutes);
 //Port
 const port = process.env.PORT || 5000;
 
+const connectDB = async () => {
+    try {
+      mongoose.connect(process.env.DATABASE, {
+      useNewUrlParser: true,
+      useUnifiedTopology: true
+       }).then(() => {
+           console.log("DB connected");
+       }).catch(
+           console.log("DB not connected")
+       );
+    } catch (error) {
+      console.log(error);
+      process.exit(1);
+    }
+  }
+
 //Starting server
-app.listen(port, () => {
-    console.log(`app is running at ${port}`);
-} );
 
 // DB connection
-mongoose.connect(process.env.DATABASE, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true
-}).then(() => {
-    console.log("DB connected");
-}).catch(
-    console.log("DB not connected")
-);
+connectDB().then(() => {
+    app.listen(port, () => {
+        console.log(`app is running at ${port}`);
+    })
+})
